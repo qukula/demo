@@ -23,13 +23,15 @@
 const state = {
   roles: [],
   info: {},
-  userMaxRegion: {}
+  userMaxRegion: {},
+  hasLogin: false
 }
 // 唯一能改 state 里面的 变量
 // store.commit('mutations 方法名', '参数对象')
 // store.commit('SET_ROLES', 10)
 const mutations = {
   SET_MaxRegion: (state, userMaxRegion) => {
+    console.log(userMaxRegion)
     state.userMaxRegion = userMaxRegion
   },
   SET_ROLES: (state, roles) => {
@@ -37,15 +39,27 @@ const mutations = {
   },
   SET_INFO: (state, info) => {
     state.info = info
+  },
+  SET_HAS_LOGIN: (state, hasLogin) => {
+    state.hasLogin = hasLogin
+    return true
   }
 }
-const actions = {}
-const modules = {}
+const actions = {
+  getUserInfo (context) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log(context)
+        context.commit('SET_HAS_LOGIN', true)
+        resolve(true)
+      }, 1000)
+    })
+  }
+}
 
 export default {
   namespaced: true,
   state,
   mutations,
-  actions,
-  modules
+  actions
 }

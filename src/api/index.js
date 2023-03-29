@@ -7,7 +7,8 @@ const qs = require('qs')
 const tokenName = 'foresttk'
 const refreshTokenName = 'forestrt'
 
-axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL
+axios.defaults.baseURL = process.env.VUE_APP_API_BASE_API
+console.log(process.env.VUE_APP_API_BASE_API)
 const errorHandle = config => {
   const refreshToken = getCookie(refreshTokenName) ? getCookie(refreshTokenName) : ''
   if (refreshToken) {

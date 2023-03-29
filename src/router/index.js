@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store'
 
 Vue.use(VueRouter)
 // 1：import 是解构过程并且是编译时执行
@@ -29,13 +30,15 @@ export const menus = [{
   redirect: '/account',
   component: () => import('@/views/Base.vue'),
   meta: {
-    sidebarVisible: true
+    sidebarVisible: true,
+    title: '我的账户'
   },
   children: [{
     path: '/account',
     name: 'Account',
     meta: {
-      sidebarVisible: true
+      sidebarVisible: true,
+      title: '我的账户'
     },
     component: () => import('@/views/my/Account')
   }]
@@ -45,13 +48,15 @@ export const menus = [{
   redirect: '/region',
   component: () => import('@/views/Base.vue'),
   meta: {
-    sidebarVisible: true
+    sidebarVisible: true,
+    title: '系统管理'
   },
   children: [{
     path: '/region',
     name: 'Region',
     meta: {
-      sidebarVisible: true
+      sidebarVisible: true,
+      title: '区划管理'
     },
     component: () => import('@/views/system/Region')
   }]
@@ -109,10 +114,14 @@ router.beforeEach(async (to, from, next) => {
     // const getRoutes = router.getRoutes()
     // console.log(getRoutes, 88)
     if (currentRoute.length === 0) {
+      const roles = await store.dispatch('user/getUserInfo')
+      console.log(roles, store)
       if (from.path.includes('login')) {
         menus.forEach(item => {
           router.addRoute(item)
         })
+        store.commit('sidebar/SET_SidebarList', menus)
+        // store.commit('user/SET_MaxRegion', 'kank看看')
         next({
           ...to,
           replace: true

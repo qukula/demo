@@ -5,10 +5,14 @@ import store from './store'
 import ElementUI from 'element-ui'
 import './css/reset.css'
 
+import api from '@/api/index.js'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 Vue.config.productionTip = false
+Vue.prototype.$api = api
 
+console.log(process.env.VUE_APP_API_BASE_API)
+console.log(process.env)
 new Vue({
   router,
   store,

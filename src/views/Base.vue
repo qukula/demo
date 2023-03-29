@@ -1,16 +1,23 @@
 <template>
-  <el-container id="app">
-    <el-header>Header</el-header>
-    <el-container>
-      <el-aside>Aside</el-aside>
-      <el-main> <router-view /></el-main>
-    </el-container>
-  </el-container>
+  <component v-bind:is="type"></component>
 </template>
 <script>
+import Horizontal from '@/components/base/layout/Horizontal'
+import Vertical from '@/components/base/layout/Vertical'
 export default {
   name: 'App',
-  components: {}
+  computed: {
+    layout: function () {
+      return 'tab-' + this.currentTab.toLowerCase()
+    }
+  },
+  components: { Horizontal, Vertical },
+  data () {
+    return {
+      type: 'Horizontal'
+      // type: 'Vertical'
+    }
+  }
 }
 </script>
 <style lang='less' scoped>

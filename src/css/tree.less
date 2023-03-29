@@ -1,0 +1,140 @@
+.width-190 {
+  width: 190px;
+}
+.tree {
+    width: 100%;
+    // max-height: 300px;
+    overflow: auto;
+    padding: 10px;
+    box-sizing: border-box;
+
+    .el-tree-node > .el-tree-node__children {
+      overflow: visible;
+    }
+
+    .el-tree-node__label {
+      font-size: 16px;
+    }
+
+    .el-tree-node__content {
+      height: 28px;
+
+      .el-tree-node__expand-icon {
+        padding: 4px 6px 4px 2px;
+      }
+
+      .el-checkbox,
+      .el-tree-node__expand-icon {
+        margin-top: 3px;
+      }
+
+      .el-checkbox__inner {
+        border-radius: 50%;
+      }
+    }
+
+  .org-tree.clear {
+    height: 280px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .org-tree.multi {
+    .el-tree-node__content {
+      .el-checkbox__inner {
+        border-radius: 10% ;
+      }
+    }
+  }
+}
+
+.org-select {
+  font-size: 16px;
+  & > .el-input .el-input__inner {
+    // font-size: $font-16;
+    color: #0aae62;
+  }
+  .org-tree {
+    width: 100%;
+    height: 300px;
+    max-height: 300px;
+    overflow: auto;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+
+    .el-tree-node > .el-tree-node__children {
+      overflow: visible;
+    }
+
+    .el-tree-node__content {
+      height: 28px;
+
+      .el-tree-node__expand-icon {
+        padding: 4px 6px 4px 2px;
+      }
+
+      .el-checkbox,
+      .el-tree-node__expand-icon {
+        margin-top: 3px;
+      }
+
+      .el-checkbox__inner {
+        border-radius: 50%;
+      }
+    }
+
+    .multi {
+      .el-tree-node__content {
+        /deep/.el-checkbox__inner {
+        border-radius: 10% !important;
+      }
+      }
+    }
+  }
+
+  .org-clear {
+    position: absolute;
+    left: -1px;
+    right: 100px;
+    bottom: -23px;
+    background-color: #fff;
+    box-sizing: border-box;
+    width: calc(100% + 2px);
+    padding: 5px 10px;
+    border-radius: 0 0 4px 4px;
+    text-align: center;
+    z-index: 99;
+    border-left: 1px solid #e4e7ed;
+    border-right: 1px solid #e4e7ed;
+    border-bottom: 1px solid #e4e7ed;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+.line-feed-solve{
+  & /deep/ .el-select__tags>span{
+    display: flex;
+    flex-wrap: nowrap;
+    .el-tag{
+      display: flex;
+      align-items: center;
+      padding: 0 10px 0 0 !important;
+      .el-select__tags-text{
+        display: inline-block;
+        overflow: hidden;
+        max-width: 95px;
+        text-overflow: ellipsis
+      }
+    }
+  }
+}
+
+.table-head-controller{
+  max-height: 500px;
+  overflow: auto;
+}
