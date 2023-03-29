@@ -8,6 +8,7 @@
                                               2. 数据应用类(存储库类,主要是数据操作类)：BaseRepository
                                               3.EntityPathBase 不清楚是什么 基类
                                     抽象接口类 1.数据绑定特性  :DataBinderTrait
+                                    看一下
 
         业务接口类控制器文件夹：security
     数据源：data
