@@ -1,7 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store'
+import authToken from '@/utils/tokenClass'
 
+// ////////////////////////////
+// 本系统版本为 ^3.6.5   这将对push  方法的 路由守卫方法的 next({to:to}) 不兼容,所以 改写成 3.0.0 版本
+const routerPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push (location) {
+  return routerPush.call(this, location).catch(error => error)
+}
+// ///////////////////////////////////
 Vue.use(VueRouter)
 // 1：import 是解构过程并且是编译时执行
 // 2：require 是赋值过程并且是运行时才执行，也就是异步加载
@@ -73,7 +81,8 @@ export const menus = [{
   // this generates a separate chunk (about.[hash].js) for this route
   // which is lazy-loaded when the route is visited.
   component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
-}]
+}
+]
 
 const createRouter = () =>
   new VueRouter({
@@ -102,8 +111,8 @@ router.onError(error => {
 })
 // 导航守卫
 router.beforeEach(async (to, from, next) => {
-  // console.log(to.path, from.path)
   const whiteList = ['/login'] // no redirect whitelist
+  // console.log(store.state.user, '看一下你')
   // 白名单列表
   if (whiteList.indexOf(to.path) !== -1) {
     // in the free login whitelist, go directly
@@ -115,17 +124,17 @@ router.beforeEach(async (to, from, next) => {
     // console.log(getRoutes, 88)
     // 判断当前路径的路由是否存在
     if (currentRoute.length === 0) {
-      const roles = await store.dispatch('user/getUserInfo')
-      console.log(roles, store)
-      if (from.path.includes('login')) {
-        menus.forEach(item => {
-          router.addRoute(item)
-        })
+      const hasLogin = authToken.getToken()
+      if (hasLogin) {
         store.commit('sidebar/SET_SidebarList', menus)
-        // store.commit('user/SET_MaxRegion', 'kank看看')
-        next({
-          ...to,
-          replace: true
+        store.dispatch('user/getUserInfo')
+        menus.forEach((item, index) => {
+          router.addRoute(item)
+          if (index === menus.length - 1) {
+            next({
+              ...to
+            })
+          }
         })
       } else {
         next(`/login?redirect=${to.path}`)
@@ -139,5 +148,7 @@ router.beforeEach(async (to, from, next) => {
 export function resetRouter () {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
+  authToken.removeToken()
+  authToken.removeRefreshToken()
 }
 export default router

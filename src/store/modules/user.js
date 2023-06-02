@@ -1,3 +1,6 @@
+
+import { handleApi } from '@/api/index.js'
+import { resetRouter } from '@/router'
 /**
  *
  * computed: {
@@ -46,26 +49,35 @@ const mutations = {
   }
 }
 const actions = {
-  getUserInfo (context) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        console.log(context)
-        context.commit('SET_HAS_LOGIN', true)
-        resolve(true)
-      }, 1000)
+  handleLogin (context, params) {
+    return handleApi(params, '/api/login', 'post').then(res => {
+      if (res) {
+        return handleUserInfo(context)
+      }
     })
   },
-  handleLogin (context, params) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        console.log(context)
-        context.commit('SET_HAS_LOGIN', true)
-        resolve(true)
-      }, 1000)
-    })
+  getUserInfo (context) {
+    return handleUserInfo(context)
+  },
+  handleLogout (context) {
+    resetRouter()
+    return setUserInfo(context)
   }
 }
-
+function handleUserInfo (context) {
+  return handleApi({}, '/api/user/getUserInfo').then(res => {
+    return setUserInfo(context, res)
+  })
+}
+function setUserInfo (context, res) {
+  return new Promise(resolve => {
+    context.commit('SET_INFO', res || {})
+    context.commit('SET_ROLES', res?.roles || [])
+    context.commit('SET_HAS_LOGIN', !!res)
+    context.commit('SET_MaxRegion', res?.regions || [])
+    resolve(true)
+  })
+}
 export default {
   namespaced: true,
   state,

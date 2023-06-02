@@ -1,22 +1,15 @@
 import axios from 'axios'
-// import router from '@/router'
-// import store from '@/store'
-import {
-  setCookie,
-  getCookie
-} from '@/utils/auth'
+import authToken from '@/utils/tokenClass'
 import {
   Notification
 } from 'element-ui'
 const qs = require('qs')
-const tokenName = 'foresttk'
-const refreshTokenName = 'forestrt'
 
 // axios.defaults.baseURL = process.env.VUE_APP_API_BASE_API
 axios.defaults.baseURL = 'https://fcs-service-test.xjy0.cn/'
 console.log(process.env.VUE_APP_API_BASE_API)
 const errorHandle = config => {
-  const refreshToken = getCookie(refreshTokenName) ? getCookie(refreshTokenName) : ''
+  const refreshToken = authToken.getRefreshToken() || ''
   if (refreshToken) {
     return axios
       .post('/api/oauth/access_token', {
@@ -54,7 +47,7 @@ instance.defaults.headers.post['Content-Type'] =
 
 instance.interceptors.request.use(
   config => {
-    const token = getCookie(tokenName)
+    const token = authToken.getToken()
     token && (config.headers.Authorization = token)
     // // 总结：使用List<Long>和Long[]是没有区别的，区别在于@RequestParam中是否加[]
 
@@ -170,8 +163,8 @@ function handleUnsuccess (data, type) {
 }
 
 function handleToken (data) {
-  setCookie(tokenName, data.token_type + ' ' + data.access_token, data.expires_in * 1000)
-  setCookie(refreshTokenName, data.refresh_token, 7 * 24 * 3600 * 1000)
+  authToken.setToken(data.token_type + ' ' + data.access_token, data.expires_in * 1000)
+  authToken.setRefreshToken(data.refresh_token, 7 * 24 * 3600 * 1000)
 }
 
 function handleExportFile (res) {

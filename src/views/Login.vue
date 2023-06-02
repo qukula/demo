@@ -2,7 +2,8 @@
   <div>
     login
     <el-button type="primary" @click="handleLogin">登录</el-button>
-    <el-button type="primary" @click="getUserInfo">信息</el-button>
+    <el-button type="primary" @click="handleLogout">注销</el-button>
+    <el-button type="primary" @click="handleLogout2">信息</el-button>
     <!-- <router-link to="/my">My</router-link> -->
 
     <!-- <region-select
@@ -25,8 +26,8 @@ export default {
     return {
       RegionDefault: 2,
       fillRegion: {},
-      type: 'Horizontal'
-      // type: 'Vertical'
+      // type: 'Horizontal'
+      type: 'Vertical'
     }
   },
   methods: {
@@ -34,17 +35,30 @@ export default {
       console.log(a, b, c)
     },
     handleLogin () {
-      this.$handleApi({ username: 'admin', password: 'shubiao1229' }, '/api/login', 'post').then(res => {
-        console.log(res, '登录')
+      this.$store
+        .dispatch('user/handleLogin', {
+          username: 'admin',
+          password: 'shubiao1229'
+        })
+        .then(res => {
+          if (res) {
+            if (this.$route.query.redirect) {
+              this.$router.push(this.$route.query.redirect)
+            } else {
+              this.$router.push('/my')
+            }
+          }
+        })
+    },
+    handleLogout () {
+      this.$store.dispatch('user/handleLogout').then(res => {
         if (res) {
-
+          this.$router.push('/login')
         }
       })
     },
-    getUserInfo () {
-      this.$handleApi({}, '/api/user/getUserInf').then(res => {
-        console.log(res, 'getUserInfo')
-      })
+    handleLogout2 () {
+      this.$router.push('/my')
     }
   }
 }

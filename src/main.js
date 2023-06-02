@@ -13,8 +13,6 @@ Vue.config.productionTip = false
 Vue.prototype.$api = api
 Vue.prototype.$handleApi = handleApi
 
-console.log(process.env.VUE_APP_API_BASE_API)
-console.log(process.env)
 new Vue({
   router,
   store,

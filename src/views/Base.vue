@@ -14,8 +14,8 @@ export default {
   components: { Horizontal, Vertical },
   data () {
     return {
-      type: 'Horizontal'
-      // type: 'Vertical'
+      // type: 'Horizontal'
+      type: 'Vertical'
     }
   }
 }
