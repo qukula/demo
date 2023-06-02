@@ -1,13 +1,19 @@
 import axios from 'axios'
 // import router from '@/router'
 // import store from '@/store'
-import { setCookie, getCookie } from '@/utils/auth'
-import { Notification } from 'element-ui'
+import {
+  setCookie,
+  getCookie
+} from '@/utils/auth'
+import {
+  Notification
+} from 'element-ui'
 const qs = require('qs')
 const tokenName = 'foresttk'
 const refreshTokenName = 'forestrt'
 
-axios.defaults.baseURL = process.env.VUE_APP_API_BASE_API
+// axios.defaults.baseURL = process.env.VUE_APP_API_BASE_API
+axios.defaults.baseURL = 'https://fcs-service-test.xjy0.cn/'
 console.log(process.env.VUE_APP_API_BASE_API)
 const errorHandle = config => {
   const refreshToken = getCookie(refreshTokenName) ? getCookie(refreshTokenName) : ''
@@ -96,7 +102,7 @@ instance.interceptors.response.use(
       } else if (res.config.url.includes('login')) {
         handleToken(res.data)
         // return res.data
-        return res
+        return true
       } else if (res.config.url.includes('exportShpByForest')) {
         return handleExportFile(res)
       } else {
@@ -111,7 +117,8 @@ instance.interceptors.response.use(
   // 请求失败
   error => {
     const {
-      response, config
+      response,
+      config
     } = error
     if (response) {
       if (!response.config.url.includes('login') && response.status === 401) {
@@ -129,8 +136,6 @@ instance.interceptors.response.use(
     }
   }
 )
-
-export default instance
 
 function handleUnsuccess (data, type) {
   switch (type) {
@@ -211,3 +216,18 @@ function handleExportFile (res) {
     }
   })
 }
+export function handleApi (data, url, method = 'get') {
+  const type = method === 'get' ? 'params' : 'data'
+  return instance({
+    url,
+    method,
+    [type]: data
+  }).then(res => {
+    if (res?.data?.success) {
+      return res.data.data
+    }
+    return res
+  })
+}
+
+export default instance

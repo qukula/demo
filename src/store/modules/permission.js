@@ -1,24 +1,3 @@
-/**
- *
- * computed: {
- * localComputed () {
- *},
-* // 使用对象展开运算符将此对象混入到外部对象中
-*
-...mapState({
-  // ...
-})
-}
-*
-*
-*/
-/**
- * import { mapState } from 'vuex'
- * computed: {
- *      localComputed(){},
- *      ...mapState(['stateName']) //
- */
-
 // 全局变量集对象
 const state = {
   roles: [],
@@ -26,9 +5,6 @@ const state = {
   userMaxRegion: {},
   hasLogin: false
 }
-// 唯一能改 state 里面的 变量
-// store.commit('mutations 方法名', '参数对象')
-// store.commit('SET_ROLES', 10)
 const mutations = {
   SET_MaxRegion: (state, userMaxRegion) => {
     console.log(userMaxRegion)
@@ -47,15 +23,6 @@ const mutations = {
 }
 const actions = {
   getUserInfo (context) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        console.log(context)
-        context.commit('SET_HAS_LOGIN', true)
-        resolve(true)
-      }, 1000)
-    })
-  },
-  handleLogin (context, params) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         console.log(context)

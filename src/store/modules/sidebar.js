@@ -25,7 +25,7 @@ const mutations = {
   }
 }
 const actions = {
-  sidebarAction (context) {
+  sidebarAction (context, params) {
   }
 }
 

@@ -104,7 +104,7 @@ router.onError(error => {
 router.beforeEach(async (to, from, next) => {
   // console.log(to.path, from.path)
   const whiteList = ['/login'] // no redirect whitelist
-
+  // 白名单列表
   if (whiteList.indexOf(to.path) !== -1) {
     // in the free login whitelist, go directly
     next()
@@ -113,6 +113,7 @@ router.beforeEach(async (to, from, next) => {
     const currentRoute = router.getMatchedComponents(to.path)
     // const getRoutes = router.getRoutes()
     // console.log(getRoutes, 88)
+    // 判断当前路径的路由是否存在
     if (currentRoute.length === 0) {
       const roles = await store.dispatch('user/getUserInfo')
       console.log(roles, store)
