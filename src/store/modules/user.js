@@ -75,7 +75,7 @@ function setUserInfo (context, res) {
     context.commit('SET_ROLES', res?.roles || [])
     context.commit('SET_HAS_LOGIN', !!res)
     context.commit('SET_MaxRegion', res?.regions || [])
-    resolve(true)
+    resolve(res)
   })
 }
 export default {

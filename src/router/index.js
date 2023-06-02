@@ -20,7 +20,7 @@ Vue.use(VueRouter)
 // }
 const constantRoutes = [{
   path: '/',
-  redirect: '/base'
+  redirect: '/my'
 },
 
 {
@@ -39,14 +39,16 @@ export const menus = [{
   component: () => import('@/views/Base.vue'),
   meta: {
     sidebarVisible: true,
-    title: '我的账户'
+    title: '我的账户',
+    roles: ['ROLE_QHGLY', 'ROLE_BZY']
   },
   children: [{
     path: '/account',
     name: 'Account',
     meta: {
       sidebarVisible: true,
-      title: '我的账户'
+      title: '我的账户',
+      roles: ['ROLE_QHGLY', 'ROLE_BZY']
     },
     component: () => import('@/views/my/Account')
   }]
@@ -57,26 +59,48 @@ export const menus = [{
   component: () => import('@/views/Base.vue'),
   meta: {
     sidebarVisible: true,
-    title: '系统管理'
+    title: '系统管理',
+    roles: ['ROLE_QHGLY', 'ROLE_BZY']
   },
   children: [{
     path: '/region',
     name: 'Region',
     meta: {
       sidebarVisible: true,
-      title: '区划管理'
+      title: '区划管理',
+      roles: ['ROLE_QHGLY']
     },
     component: () => import('@/views/system/Region')
+  },
+  {
+    path: '/base',
+    name: 'Home1',
+    meta: {
+      sidebarVisible: true,
+      title: 'Home1',
+      roles: ['ROLE_BZY']
+    },
+    component: () => import('@/views/Home.vue')
   }]
 },
 {
   path: '/base',
   name: 'Home',
+  meta: {
+    sidebarVisible: true,
+    title: 'Home',
+    roles: ['ROLE_BZY']
+  },
   component: () => import('@/views/Home.vue')
 },
 {
   path: '/about',
   name: 'About',
+  meta: {
+    sidebarVisible: true,
+    title: 'About',
+    roles: ['ROLE_QHGLY']
+  },
   // route level code-splitting
   // this generates a separate chunk (about.[hash].js) for this route
   // which is lazy-loaded when the route is visited.
@@ -84,6 +108,8 @@ export const menus = [{
 }
 ]
 
+const enterRoles = ['ROLE_ADMIN', 'ROLE_BZY', 'ROLE_QHGLY', 'ROLE_NH', 'ROLE_HOME', 'ROLE_LAND_MAP', 'ROLE_SZNY_YZT']
+// const permissionRoles = ['ROLE_BZY', 'ROLE_QHGLY', 'ROLE_NH', 'ROLE_HOME', 'ROLE_LAND_MAP', 'ROLE_SZNY_YZT', 'ROLE_AUDITOR']
 const createRouter = () =>
   new VueRouter({
     mode: 'history',
@@ -113,6 +139,8 @@ router.onError(error => {
 router.beforeEach(async (to, from, next) => {
   const whiteList = ['/login'] // no redirect whitelist
   // console.log(store.state.user, '看一下你')
+  // const getRoutes = router.getRoutes()
+  // console.log(getRoutes, 88)
   // 白名单列表
   if (whiteList.indexOf(to.path) !== -1) {
     // in the free login whitelist, go directly
@@ -126,14 +154,23 @@ router.beforeEach(async (to, from, next) => {
     if (currentRoute.length === 0) {
       const hasLogin = authToken.getToken()
       if (hasLogin) {
-        store.commit('sidebar/SET_SidebarList', menus)
-        store.dispatch('user/getUserInfo')
-        menus.forEach((item, index) => {
-          router.addRoute(item)
-          if (index === menus.length - 1) {
+        // store.commit('sidebar/SET_SidebarList', menus)
+        // menus.forEach((item, index) => {
+        //   router.addRoute(item)
+        //   if (index === menus.length - 1) {
+        //     next({
+        //       ...to
+        //     })
+        //   }
+        // })
+        // const res = await handlePermission()
+        handlePermission().then(res => {
+          if (res) {
             next({
               ...to
             })
+          } else {
+            next(`/login?redirect=${to.path}`)
           }
         })
       } else {
@@ -144,6 +181,50 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 })
+
+function handlePermission () {
+  return store.dispatch('user/getUserInfo').then(res => {
+    const roles = res.roles.map(item => item.name)
+    if (roles.some(item => enterRoles.some(it => it === item))) {
+      return handleRolesPermission(['ROLE_QHGLY'])
+    }
+
+    return res
+  })
+}
+function handleRolesPermission (roles) {
+  return new Promise(resolve => {
+    let reMenus = []
+    if (roles.find(item => item === 'ROLE_ADMIN')) {
+      reMenus = [...menus]
+    } else {
+      const roleRoute = menus.map(route => {
+        const item = { ...route }
+        if (item.meta) {
+          if (item.meta.roles.some(i => roles.some(it => it === i))) {
+            if (item.children?.length) {
+              item.children = item.children.filter(j => {
+                if (j.meta.roles.some(i => roles.some(it => it === i))) {
+                  return j
+                }
+              })
+            }
+            return item
+          }
+        } else {
+          return item
+        }
+      }).filter(y => y)
+      reMenus = [...roleRoute]
+    }
+    // console.log(reMenus, 'all')
+    reMenus.forEach((item, index) => {
+      router.addRoute(item)
+    })
+    resolve(true)
+  })
+}
+// handleRolesPermission(['ROLE_QHGLY'])
 // 重置路由
 export function resetRouter () {
   const newRouter = createRouter()
