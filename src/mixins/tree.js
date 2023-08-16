@@ -3,7 +3,7 @@ import {
 } from 'element-ui'
 import scroll from '@/utils/scroll'
 import {
-  mapGetters,
+  // mapGetters,
   mapMutations
 } from 'vuex'
 export default {
@@ -26,7 +26,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['roles']),
+    // ...mapGetters(['roles']),
     isAdminTree () {
       if (this.roles.some(item => item === 'ROLE_ADMIN')) {
         return true
@@ -113,17 +113,25 @@ export default {
 
     // 获取用户关联最大机构
     getMaxOrg (type) {
+      console.log(type, '这里有嘛')
+      const params = {
+        selectedRole: 'ROLE_ADMIN',
+        jsonConfig: 'api',
+        id: 1,
+        name: this.name
+      }
+      if (this.isCountry) {
+        params.all = true
+        params.onlyCountry = '全国'
+      } else {
+        params.authorized = true
+      }
       return this.$api
         .get('/region/getRegions', {
-          params: {
-            authorized: this.isCountry ? null : !this.isCountry,
-            jsonConfig: 'api',
-            all: this.isCountry ? this.isCountry : null,
-            onlyCountry: this.isCountry ? '全国' : null,
-            name: this.name
-          }
+          params: params
         })
         .then(res => {
+          console.log(res, '你或者吗')
           if (res && res.data.success) {
             res.data.data.forEach(item => {
               item.leaf = !item.isParent

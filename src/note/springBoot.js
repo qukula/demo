@@ -9,7 +9,6 @@
                                               3.EntityPathBase 不清楚是什么 基类
                                     抽象接口类 1.数据绑定特性  :DataBinderTrait
                                     看一下
-
         业务接口类控制器文件夹：security
     数据源：data
     基础设施：infrastructure

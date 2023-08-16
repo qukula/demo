@@ -30,6 +30,33 @@ const constantRoutes = [{
   meta: {
     title: '登录'
   }
+},
+
+{
+  path: '/snow',
+  name: 'SnowPage',
+  component: () => import('@/components/somegood/SnowPage.vue'),
+  meta: {
+    title: '雪花'
+  }
+},
+
+{
+  path: '/stars',
+  name: 'SnowPage',
+  component: () => import('@/components/somegood/Stars.vue'),
+  meta: {
+    title: '雪花'
+  }
+},
+
+{
+  path: '/fireworks',
+  name: 'Fireworks',
+  component: () => import('@/components/somegood/fireworks.vue'),
+  meta: {
+    title: '雪花'
+  }
 }
 ]
 export const menus = [{
