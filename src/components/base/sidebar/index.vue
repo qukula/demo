@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'has-logo': showLogo }">
     <!-- <logo v-if="showLogo" :collapse="isCollapse" /> -->
-    <div v-if="showLogo">logo看看</div>
+    <!-- <div v-if="showLogo">logo看看</div> -->
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <!-- :default-active="activeMenu" -->
       <!-- :text-color="variables.menuText" -->
@@ -10,7 +10,6 @@
       <el-menu
         :collapse="isCollapse"
         :unique-opened="true"
-        :collapse-transition="false"
         mode="vertical"
       >
         <sidebar-item
@@ -32,6 +31,10 @@ export default {
   mixins: [],
   components: { SidebarItem },
   computed: {
+    showLogo () {
+      console.log(this.$router.options, 700)
+      return false
+    },
     ...mapGetters(['sidebarList'])
   },
   data () {

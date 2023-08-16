@@ -40,6 +40,7 @@ export const menus = [{
   meta: {
     sidebarVisible: true,
     title: '我的账户',
+    icon: 'vue-dsn-icon-wendang',
     roles: ['ROLE_QHGLY', 'ROLE_BZY']
   },
   children: [{
@@ -48,6 +49,7 @@ export const menus = [{
     meta: {
       sidebarVisible: true,
       title: '我的账户',
+      icon: 'vue-dsn-icon-index',
       roles: ['ROLE_QHGLY', 'ROLE_BZY']
     },
     component: () => import('@/views/my/Account')
@@ -60,6 +62,7 @@ export const menus = [{
   meta: {
     sidebarVisible: true,
     title: '系统管理',
+    icon: 'vue-dsn-icon-wendang',
     roles: ['ROLE_QHGLY', 'ROLE_BZY']
   },
   children: [{
@@ -67,6 +70,7 @@ export const menus = [{
     name: 'Region',
     meta: {
       sidebarVisible: true,
+      icon: 'vue-dsn-icon-wendang',
       title: '区划管理',
       roles: ['ROLE_QHGLY']
     },
@@ -77,6 +81,7 @@ export const menus = [{
     name: 'Home1',
     meta: {
       sidebarVisible: true,
+      icon: 'vue-dsn-icon-wendang',
       title: 'Home1',
       roles: ['ROLE_BZY']
     },
@@ -148,22 +153,10 @@ router.beforeEach(async (to, from, next) => {
   } else {
     // other pages that do not have permission to access are redirected to the login page.
     const currentRoute = router.getMatchedComponents(to.path)
-    // const getRoutes = router.getRoutes()
-    // console.log(getRoutes, 88)
     // 判断当前路径的路由是否存在
     if (currentRoute.length === 0) {
       const hasLogin = authToken.getToken()
       if (hasLogin) {
-        // store.commit('sidebar/SET_SidebarList', menus)
-        // menus.forEach((item, index) => {
-        //   router.addRoute(item)
-        //   if (index === menus.length - 1) {
-        //     next({
-        //       ...to
-        //     })
-        //   }
-        // })
-        // const res = await handlePermission()
         handlePermission().then(res => {
           if (res) {
             next({
@@ -218,6 +211,7 @@ function handleRolesPermission (roles) {
       reMenus = [...roleRoute]
     }
     // console.log(reMenus, 'all')
+    store.commit('sidebar/SET_SidebarList', reMenus)
     reMenus.forEach((item, index) => {
       router.addRoute(item)
     })

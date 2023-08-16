@@ -1,10 +1,10 @@
 <template>
   <div>
-    <template v-if="hasChildren(item.children)">
-        <!-- :index="resolvePath(item.path)" -->
+    <template>
       <el-submenu
         ref="subMenu"
         popper-append-to-body
+        :index="item.path"
       >
         <template slot="title">
           <sidebar-title
@@ -15,11 +15,9 @@
         <sidebar-item
           v-for="child in item.children"
           :key="child.path"
-          :is-nest="true"
           :item="child"
           class="nest-menu"
         />
-          <!-- :base-path="resolvePath(child.path)" -->
       </el-submenu>
     </template>
   </div>
