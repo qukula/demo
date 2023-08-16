@@ -67,7 +67,7 @@ export const menus = [{
   meta: {
     sidebarVisible: true,
     title: '我的账户',
-    icon: 'vue-dsn-icon-wendang',
+    icon: 'item',
     roles: ['ROLE_QHGLY', 'ROLE_BZY']
   },
   children: [{
