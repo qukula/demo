@@ -37,8 +37,8 @@ export default {
     handleLogin () {
       this.$store
         .dispatch('user/handleLogin', {
-          username: '13012455421',
-          password: '123456'
+          username: 'qkl22',
+          password: 'dcb432$g'
         })
         .then(res => {
           if (res) {
